@@ -175,10 +175,10 @@ else
 endif
 
 # optimization level; overridden for certain problematic files
-CCO = -O3
+CCO = -O2
 
 # debugging; halt on warnings
-CCDEBUG+= -ggdb3
+CCDEBUG+= -g
 
 
 #############################################################################
@@ -191,7 +191,7 @@ INCLUDEDIRS=-I$(SRCDIR) -I$(METADIR) -I$(SDKSRC)/engine -I$(SDKSRC)/common \
 	-I$(SDKSRC)/pm_shared -I$(SDKSRC)/dlls -I$(SDKSRC)/public -I$(SDKSRC)
 FILES_ALL = *.cpp *.h [A-Z]* *.rc
 
-CFLAGS=-Wall -Wno-unknown-pragmas 
+CFLAGS=-Wall -Wno-unknown-pragmas -fpermissive
 #CFLAGS += -DTEST
 
 ifeq "$(USER)" "flori"

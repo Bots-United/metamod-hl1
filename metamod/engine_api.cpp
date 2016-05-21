@@ -54,6 +54,12 @@
 	CALL_ENGINE_API_void(pfnName, pfn_args); \
 	CALL_PLUGIN_API_void(P_POST, pfnName, pfn_args, engine_post_table);
 
+#define META_ENGINE_HANDLE_void2(FN_TYPE, pfnName, pfnSDKName, pfn_args)  \
+	SETUP_API_CALLS_void(FN_TYPE, pfnName, engine_info); \
+	CALL_PLUGIN_API_void(P_PRE, pfnSDKName, pfn_args, engine_table); \
+	CALL_ENGINE_API_void(pfnSDKName, pfn_args); \
+	CALL_PLUGIN_API_void(P_POST, pfnSDKName, pfn_args, engine_post_table);
+
 // Engine routines, functions returning an actual value.
 #define META_ENGINE_HANDLE(ret_t, ret_init, FN_TYPE, pfnName, pfn_args) \
 	SETUP_API_CALLS(ret_t, ret_init, FN_TYPE, pfnName, engine_info); \
@@ -849,17 +855,17 @@ int mm_GetTimesTutorMessageShown(int mid) {
 }
 
 void mm_ProcessTutorMessageDecayBuffer(int *buffer, int bufferLength) {
-	META_ENGINE_HANDLE_void(FN_PROCESSTUTORMESSAGEDECAYBUFFER, pfnProcessTutorMessageDecayBuffer, (buffer, bufferLength));
+	META_ENGINE_HANDLE_void2(FN_PROCESSTUTORMESSAGEDECAYBUFFER, pfnProcessTutorMessageDecayBuffer, ProcessTutorMessageDecayBuffer, (buffer, bufferLength));
 	RETURN_API_void()
 }
 
 void mm_ConstructTutorMessageDecayBuffer(int *buffer, int bufferLength) {
-	META_ENGINE_HANDLE_void(FN_CONSTRUCTTUTORMESSAGEDECAYBUFFER, pfnConstructTutorMessageDecayBuffer, (buffer, bufferLength));
+	META_ENGINE_HANDLE_void2(FN_CONSTRUCTTUTORMESSAGEDECAYBUFFER, pfnConstructTutorMessageDecayBuffer, ConstructTutorMessageDecayBuffer, (buffer, bufferLength));
 	RETURN_API_void()
 }
 
 void mm_ResetTutorMessageDecayData(void) {
-	META_ENGINE_HANDLE_void(FN_RESETTUTORMESSAGEDECAYDATA, pfnResetTutorMessageDecayData, ());
+	META_ENGINE_HANDLE_void2(FN_RESETTUTORMESSAGEDECAYDATA, pfnResetTutorMessageDecayData, ResetTutorMessageDecayData, ());
 	RETURN_API_void()
 }
 

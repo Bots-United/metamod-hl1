@@ -50,13 +50,15 @@ bool EngineInfo::check_for_engine_module( const char* _pName )
 
 #ifdef _WIN32
 
-	// The engine module is either sw.dll or hw.dll or swds.dll
+	// The engine module is either sw.dll or hw.dll or swds.dll or xash.dll
 	pC = strrchr( _pName, '.' );
 
 	pC -= 2;
 	if ( 0 != strcmp(pC, "sw.dll") && 0 != strcmp(pC, "hw.dll") ) {
 		pC -= 2;
-		if ( 0 != strcmp(pC, "swds.dll") ) return false;
+		if ( 0 != strcmp(pC, "swds.dll") || 0 != strcmp(pC, "xash.dll") ) {
+			return false;
+		}
 	}
 
 	HMODULE hModule = GetModuleHandle( pC );
@@ -86,10 +88,15 @@ bool EngineInfo::check_for_engine_module( const char* _pName )
 		return true;
 	}
 
-	// Check for engine_*.so
+	// Check for libxash.so
 	size = strlen( _pName );
+	if ( size >= 10 && 0 == strcmp( _pName + size - 10, "libxash.so") ) {
+		return true;
+	}
+
+	// Check for engine_*.so
 	if ( size < 11 ) {
-		// Forget it, this string is too short to even be 'engine_.so', so
+		// Forget it, this string is too short to even be 'engine_*.so', so
 		// it can't the name of the engine shared library.
 		return false;
 	}

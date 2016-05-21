@@ -485,9 +485,9 @@ meta_enginefuncs_t::meta_enginefuncs_t(
     pfnGetLocalizedStringLength = _pfnGetLocalizedStringLength;
     pfnRegisterTutorMessageShown = _pfnRegisterTutorMessageShown;
     pfnGetTimesTutorMessageShown = _pfnGetTimesTutorMessageShown;
-    pfnProcessTutorMessageDecayBuffer = _pfnProcessTutorMessageDecayBuffer;
-    pfnConstructTutorMessageDecayBuffer = _pfnConstructTutorMessageDecayBuffer;
-    pfnResetTutorMessageDecayData = _pfnResetTutorMessageDecayData;
+    ProcessTutorMessageDecayBuffer = _pfnProcessTutorMessageDecayBuffer;
+    ConstructTutorMessageDecayBuffer = _pfnConstructTutorMessageDecayBuffer;
+    ResetTutorMessageDecayData = _pfnResetTutorMessageDecayData;
     pfnQueryClientCvarValue = _pfnQueryClientCvarValue;
     pfnQueryClientCvarValue2 = _pfnQueryClientCvarValue2;
     pfnCheckParm = _pfnCheckParm;
@@ -590,14 +590,14 @@ void HL_enginefuncs_t::determine_engine_interface_version( void )
 	if ( ! Engine.info.is_valid_code_pointer(pfnGetTimesTutorMessageShown) ) {
 		pfnGetTimesTutorMessageShown = NULL;
 	}
-	if ( ! Engine.info.is_valid_code_pointer(pfnProcessTutorMessageDecayBuffer) ) {
-		pfnProcessTutorMessageDecayBuffer = NULL;
+	if ( ! Engine.info.is_valid_code_pointer(ProcessTutorMessageDecayBuffer) ) {
+		ProcessTutorMessageDecayBuffer = NULL;
 	}
-	if ( ! Engine.info.is_valid_code_pointer(pfnConstructTutorMessageDecayBuffer) ) {
-		pfnConstructTutorMessageDecayBuffer = NULL;
+	if ( ! Engine.info.is_valid_code_pointer(ConstructTutorMessageDecayBuffer) ) {
+		ConstructTutorMessageDecayBuffer = NULL;
 	}
-	if ( ! Engine.info.is_valid_code_pointer(pfnResetTutorMessageDecayData) ) {
-		pfnResetTutorMessageDecayData = NULL;
+	if ( ! Engine.info.is_valid_code_pointer(ResetTutorMessageDecayData) ) {
+		ResetTutorMessageDecayData = NULL;
 	}
 	if ( ! Engine.info.is_valid_code_pointer(pfnQueryClientCvarValue) ) {
 		pfnQueryClientCvarValue = NULL;
@@ -654,9 +654,9 @@ void HL_enginefuncs_t::determine_engine_interface_version( void )
 	if ( pfnGetLocalizedStringLength == NULL ) cntInvals++;
 	if ( pfnRegisterTutorMessageShown == NULL ) cntInvals++;
 	if ( pfnGetTimesTutorMessageShown == NULL ) cntInvals++;
-	if ( pfnProcessTutorMessageDecayBuffer == NULL ) cntInvals++;
-	if ( pfnConstructTutorMessageDecayBuffer == NULL ) cntInvals++;
-	if ( pfnResetTutorMessageDecayData == NULL ) cntInvals++;
+	if ( ProcessTutorMessageDecayBuffer == NULL ) cntInvals++;
+	if ( ConstructTutorMessageDecayBuffer == NULL ) cntInvals++;
+	if ( ResetTutorMessageDecayData == NULL ) cntInvals++;
 
 	if ( cntInvals > 0 ) {
 		return;
@@ -712,9 +712,9 @@ void HL_enginefuncs_t::fixup_engine_interface( void )
 		pfnGetLocalizedStringLength = NULL;
 		pfnRegisterTutorMessageShown = NULL;
 		pfnGetTimesTutorMessageShown = NULL;
-		pfnProcessTutorMessageDecayBuffer = NULL;
-		pfnConstructTutorMessageDecayBuffer = NULL;
-		pfnResetTutorMessageDecayData = NULL;
+		ProcessTutorMessageDecayBuffer = NULL;
+		ConstructTutorMessageDecayBuffer = NULL;
+		ResetTutorMessageDecayData = NULL;
 	case 155:
 		pfnQueryClientCvarValue = NULL;
 	case 156:
