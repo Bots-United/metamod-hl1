@@ -111,12 +111,13 @@ void metamod_startup(void) {
 	META_LOG("compiled: %s %s (%s)", COMPILE_TIME, COMPILE_TZONE, OPT_TYPE);
 	META_LOG("engine: %s", Engine.info.type());
 
+#ifdef DEBUG
 	// If running with "+developer", allow an opportunity to break in with
 	// a debugger.
 	if((int) CVAR_GET_FLOAT("developer") != 0) {
 		sleep(10);
 	}
-
+#endif
 	// specify our new() handler
     mm_set_new_handler();
 
