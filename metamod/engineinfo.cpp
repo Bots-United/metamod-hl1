@@ -137,13 +137,18 @@ bool EngineInfo::check_for_engine_module( const char* _pName )
 
 #else
 
-	// The engine module is either hw.dylib or engine.dylib
+	// The engine module is either hw.dylib, engine.dylib or libxash.dylib
 	pC = strrchr( _pName, '.' );
 
 	pC -= 2;
 	if ( 0 != strcmp(pC, "hw.dylib") ) {
 		pC -= 4;
-		if ( 0 != strcmp(pC, "engine.dylib") ) return false;
+		if ( 0 != strcmp(pC, "engine.dylib") ) {
+			pC--;
+			if ( 0 != strcmp(pC, "libxash.dylib") ) {
+				return false;
+			}
+		}
 	}
 
 	size = 0;
