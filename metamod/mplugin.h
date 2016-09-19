@@ -198,8 +198,6 @@ class MPlugin {
 // catches.
 #define SHOW_IFDEF(api_table, info_table, pfnName, pre_str, post_str) \
 	if(api_table->pfnName) { META_CONS("%s%s%s", pre_str, info_table.pfnName.name, post_str); n++;}
-#define SHOW_IFDEF2(api_table, info_table, pfnName, pfnSDKName, pre_str, post_str) \
-	if(api_table->pfnSDKName) { META_CONS("%s%s%s", pre_str, info_table.pfnName.name, post_str); n++;}
 
 #define SHOW_DEF_DLLAPI(api_table, pre_str, post_str) \
 	n=0; \
@@ -415,9 +413,9 @@ class MPlugin {
 	SHOW_IFDEF(api_table, engine_info, pfnGetLocalizedStringLength,			pre_str, post_str); \
 	SHOW_IFDEF(api_table, engine_info, pfnRegisterTutorMessageShown,		pre_str, post_str); \
 	SHOW_IFDEF(api_table, engine_info, pfnGetTimesTutorMessageShown,		pre_str, post_str); \
-	SHOW_IFDEF2(api_table, engine_info, pfnProcessTutorMessageDecayBuffer, ProcessTutorMessageDecayBuffer,	pre_str, post_str); \
-	SHOW_IFDEF2(api_table, engine_info, pfnConstructTutorMessageDecayBuffer, ConstructTutorMessageDecayBuffer,	pre_str, post_str); \
-	SHOW_IFDEF2(api_table, engine_info, pfnResetTutorMessageDecayData, ResetTutorMessageDecayData,		pre_str, post_str); \
+	SHOW_IFDEF(api_table, engine_info, pfnProcessTutorMessageDecayBuffer,	pre_str, post_str); \
+	SHOW_IFDEF(api_table, engine_info, pfnConstructTutorMessageDecayBuffer,	pre_str, post_str); \
+	SHOW_IFDEF(api_table, engine_info, pfnResetTutorMessageDecayData,		pre_str, post_str); \
 	SHOW_IFDEF(api_table, engine_info, pfnQueryClientCvarValue,				pre_str, post_str); \
 	SHOW_IFDEF(api_table, engine_info, pfnCheckParm,			pre_str, post_str);
 
