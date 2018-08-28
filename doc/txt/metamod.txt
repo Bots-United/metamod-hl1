@@ -39,15 +39,14 @@ Installation
 If you have installed AdminMod (www.adminmod.org) 2.50 or later, then the
 AM installer has already installed Metamod for you. If you only want to
 upgrade your Metamod with a more recent version, simply grab the
-metamod.dll (win32) or metamod_i386.so (linux) file and replace the file
-currently on your system.
+metamod.dll (win32), metamod.so (linux) or metamod.dylib (osx) file and
+replace the file currently on your system.
 
 If you want to install Metamod by hand, here's what you have to do:
 
-
-  - Install the Metamod library (.dll for win32, or .so for linux) to a
-    directory under your game directory. For instance, if you were running
-    Counter-Strike, under win32 you might want have:
+  - Install the Metamod library (.dll for win32, .so for linux, or .dylib
+    for osx) to a directory under your game directory. For instance, if
+    you were running Counter-Strike, under win32 you might want have:
 
             half-life/cstrike/addons/metamod/dlls/metamod.dll
 
@@ -57,16 +56,18 @@ If you want to install Metamod by hand, here's what you have to do:
     dll filename with the Metamod dll filename. For instance with
     Counter-Strike, you would change:
 
-        gamedll "dlls/mp.dll"
-        gamedll_linux "dlls/cs_i386.so"
+        gamedll "dlls\mp.dll"
+        gamedll_linux "dlls/cs.so"
+        gamedll_osx "dlls/cs.dylib"
 
     to:
 
-        gamedll "addons/metamod/dlls/metamod.dll"
-        gamedll_linux "addons/metamod/dlls/metamod_i386.so"
+        gamedll "addons\metamod\dlls\metamod.dll"
+        gamedll_linux "addons/metamod/dlls/metamod.so"
+        gamedll_osx "addons/metamod/dlls/metamod.dylib"
 
     Note that it's only really necessary to change the line corresponding
-    to your OS (win32 or linux); you can leave the other line unchanged,
+    to your OS (win32, linux or osx); you can leave the other line unchanged,
     or you can change it - it doesn't matter.
 
   - To load plugins at game startup, you'll need to create a "plugins.ini"
@@ -124,7 +125,7 @@ plugin to load:
 
 Fields are whitespace delimited (tabs/spaces).
 
-  - Platform is a keyword, either "linux" or "win32".
+  - Platform is a keyword ("linux", "win32" or "osx").
 
   - Filepath is a path to the DLL/so file. Relative paths are from the
     game dir; absolute paths are also valid. Paths should use unix-style

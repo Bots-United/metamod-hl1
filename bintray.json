@@ -1,0 +1,41 @@
+{
+    "package": {
+        "name": "autobuild",
+        "repo": "metamod-hl1",
+        "subject": "bots-united",
+        "desc": "Fork of Metamod for Half-Life 1",
+        "website_url": "https://www.metamod.org/",
+        "issue_tracker_url": "https://github.com/Bots-United/metamod-hl1/issues",
+        "github_repo": "Bots-United/metamod-hl1",
+        "vcs_url": "https://github.com/Bots-United/metamod-hl1.git",
+        "github_use_tag_release_notes": true,
+        "github_release_notes_file": "RELEASE.txt",
+        "licenses": ["GPL-2.0"],
+        "labels": ["game", "c", "metamod"],
+        "public_download_numbers": true,
+        "public_stats": true,
+        "attributes": [
+        ]
+    },
+
+    "version": {
+        "name": "@VERSION@",
+        "desc": "@DESC@",
+        "released": "@RELEASE_DATE@",
+        "vcs_tag": "@VCS_TAG@",
+        "attributes": [
+         {"name": "Author",		"values" : ["@AUTHOR@"],   		"type": "string"},
+         {"name": "AuthorDate",	"values" : ["@AUTHOR_DATE@"],   "type": "string"},
+         {"name": "Commiter",	"values" : ["@COMMITER@"], 		"type": "string"},
+         {"name": "Branch",		"values" : ["@BRANCH@"],   		"type": "string"},
+         {"name": "CommitID", 	"values" : ["@COMMITID@"], 		"type": "string"}
+        ]
+    },
+
+    "files":
+        [
+        {"includePattern": "deploy/(.*)", 
+         "uploadPattern": "@VERSION@/$1"}
+        ],
+    "publish": true
+}

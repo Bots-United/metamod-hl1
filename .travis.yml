@@ -1,0 +1,125 @@
+language: c
+
+env:
+  global:
+  - CACHE=$HOME/.metamod-caches
+
+cache:
+  branch: md5deep
+  directories:
+  - "$CACHE"
+
+before_script:
+  - mkdir deploy
+  - git clone https://github.com/Bots-United/hlsdk
+
+matrix:
+  fast_finish: true
+  include:
+  - os: linux
+    dist: trusty
+    script:
+      - cd metamod
+      - make OPT=opt SDKTOP=../hlsdk
+      - zip -9 -j ../deploy/metamod-linux-amd64.zip opt.linux.amd64/metamod.so
+      - cd ..
+
+  - os: linux
+    dist: trusty
+    addons:
+      apt:
+        packages:
+        - libc6-dev-i386
+        - lib32gcc-4.8-dev
+        - lib32stdc++-4.8-dev
+        - g++-multilib
+        - zip
+    script:
+      - cd metamod
+      - make OPT=opt SDKTOP=../hlsdk MODARCH=i386 ARCHD=
+      - zip -9 -j ../deploy/metamod-linux-i386.zip opt.linux/metamod.so
+      - cd ..
+
+  - os: linux
+    dist: trusty
+    addons:
+      apt:
+        packages:
+        - binutils-mingw-w64-i686
+        - gcc-mingw-w64-i686
+        - g++-mingw-w64-i686
+        - zip
+    script:
+      - cd metamod
+      - touch Rules.depend
+      - make OS=windows OPT=opt LD_WINDLL='i686-w64-mingw32-dllwrap --driver-name i686-w64-mingw32-g++'
+        CC_WIN=i686-w64-mingw32-g++ RES_WIN=i686-w64-mingw32-windres SDKTOP=../hlsdk
+      - zip -9 -j ../deploy/metamod-win32.zip opt.win32/metamod.dll
+      - cd ..
+
+  - os: osx
+    osx_image: xcode8
+    language: objective-c
+    script:
+      - cd metamod
+      - make OPT=opt SDKTOP=../hlsdk
+      - zip -9 -j ../deploy/metamod-macOS.zip opt.darwin/metamod.dylib
+      - cd ..
+
+  - os: linux
+    dist: trusty
+    addons:
+      apt:
+        packages:
+        - zip
+    script:
+      - cd doc
+      - zip -9 -r ../deploy/metamod-doc.zip ./*
+      - cd ..
+
+before_deploy:
+  - sed=sed; date=date
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]]
+    then
+        brew update
+        brew install gnu-sed
+        sed=gsed
+        date=gdate
+    fi
+  - DATE=$($date -d $(git show -s --format=%cI) "+%F")
+  - COMMIT=$(git rev-parse --short HEAD)
+  - |
+    $sed -i "
+    s/@VERSION@/v$DATE-g$COMMIT-$TRAVIS_BRANCH/g
+    s/@DESC@/$(echo -n $TRAVIS_COMMIT_MESSAGE|tr '\n' ';'|sed -e 's@[\\"]@\\&@g;s@[/&\$]@\\&@g')/g
+    s/@RELEASE_DATE@/$(git show -s --format=%cI)/g
+    s/@VCS_TAG@/$(git describe --tags)/g
+    s/@AUTHOR@/$(git show -s --format=%an)/g
+    s/@AUTHOR_DATE@/$(git show -s --format=%ai)/g
+    s/@COMMITER@/$(git show -s --format=%cn)/g
+    s/@BRANCH@/$TRAVIS_BRANCH/g
+    s/@COMMITID@/$(git show -s --format=%h)/g
+    " bintray.json
+  - cat bintray.json
+
+deploy:
+  - provider: releases
+    api_key:
+      secure: ctlXG13Rt6hoWuQKYHj93t84zqYxA7BcOlUlx/qzfh8W69KhG3TbfuFjUkCYME/WRYef3UJoJORArqA01pOanuqAFEF3Pt4QbhIqZSS+6ynJE/LqjHCboiqpTFHjx9KCJ5NSR3QwC1qkyUEuPj7U9lHCf3y+WmNscDfKCyXYlQ10M5HpsXp9JuvsPsaFU8bVHsSYW5DjrWFma/DlVVCqvnkTkw1IweyLZSY2l+jHM5CfO9bpQAsyvYnXQDSnxmPu+RAyRNb/z+FD4vdwrbq+S3Adu+qtXMvzgAFHqfV05rofY3nj6fIpSxou5YnMlEuL8KRgbOvfrfheZecBRCir6+nkosV1u1+/vZxFlYtN01qWEIP5zkSLgOU2BcSoqUG0Zzez6kj6D1agnjO3cy8HrZgNPtaYZ+6ShgqJwcveoIEesn+w5A5B/jkPTjm1OtA42/s5YRQX5ZP6Ql30RUsGi+b+9Hc05WQCn3TgKsshiB/F9ZbQzUCDe0/FsRzkmBguhj5nmEzc1iJcDp9rAuJPrpY0UKMtYvTRSt2ixsQC9GZuMfFmZOus4Dm0qQAegFmcIrfjEUS3q0dwndxy9kbizeD9c3LtwtKv/757fkHmaxcAq5yiyzRgsSubY+R4mDAbSfRedRVm3sub5Ld1CPyWcKjbEdsvYe89RDqlMKcTenM=
+    file: deploy/*
+    file_glob: true
+    skip_cleanup: true
+    overwrite: true
+    on:
+      all_branches: true
+      tags: true
+
+  - provider: bintray
+    user: cecilharvey
+    key:
+      secure: efwARu5Gnn4YzQBo5Z7LxFFXKeaeJMgdbNceES3XT55eg4PiR2Le6tUlWqz5HXBPXzy2SvouNLwn8p4EQBkcWToFjwv2Wx7Wo68RDkipHw0aMoq8r6TgGaaYczSzCjI+QlZEPBdeY/lyUA+zsG0cSMK4XTkWnnXGLz0rgJeJF0a1rn72SsoBP6QIfW20AtS4ggZ1+ukwGE1Cb445I/wTwnCqiby2h3mwvZWAqIpNF16o/qhroH1IYWSp/c23bAIPePwVlejr4r94i4zUh0FEFI7YVG8iuOpwoRC4fxRIBjnVA9g3uKyqrV0MlnzGn3bTBaE5BORDs9G1TlwH6mSRylhozEgeMldi84JRSEunQjzspeEM5oBZsJEERy8o1jnua+kEmSSmAVf0rL9dt6Jo+8x1+uCqBGSjBsJUuEPtsvWZjPXstPcr/WxvddrfNvsrps969f8X4YPWM10QlSxkto6BrWCcpc+Ft1ukS3/+7OC1e4MnY6E9OPQwUwo02h9M92dzrob485BCNx+POyVix2PvwKJEkCCpG6xlew8Rk1EU/AuMqMoeNxgXki0BsD7zoyEAIvgSmrCvZF4MUKQZ3hPjpJeYza1L00lEGMEAB3MAtj8IiR5ITAlL7i6f0mj+FYIre6mEqkLy8pCHglEqvXT/j5vpE/HHAZcjMPvn/vI=
+    file: bintray.json
+    skip_cleanup: true
+    on:
+      all_branches: true
